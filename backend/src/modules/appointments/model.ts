@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { Appointment as IAppointment } from '@miturnouy/types';
+import { Appointment as IAppointment } from '../../shared/types';
 
 export interface AppointmentDocument extends Omit<IAppointment, 'id' | 'clientId' | 'professionalId' | 'serviceId' | 'couponId'>, Document {
   clientId: Schema.Types.ObjectId;

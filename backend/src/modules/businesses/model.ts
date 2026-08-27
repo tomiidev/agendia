@@ -1,5 +1,5 @@
 ﻿import mongoose, { Schema, Document } from 'mongoose';
-import { Business as IBusiness } from '@miturnouy/types';
+import { Business as IBusiness } from '../../shared/types';
 
 export interface BusinessDocument extends Omit<IBusiness, 'id'>, Document {}
 

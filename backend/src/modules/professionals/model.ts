@@ -1,5 +1,5 @@
 ﻿import mongoose, { Schema, Document } from 'mongoose';
-import { Professional as IProfessional } from '@miturnouy/types';
+import { Professional as IProfessional } from '../../shared/types';
 
 export interface ProfessionalDocument extends Omit<IProfessional, 'id' | 'services'>, Document {
   services: Schema.Types.ObjectId[];

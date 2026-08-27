@@ -2,7 +2,7 @@ import { ServiceModel } from '../services/model';
 import { ProfessionalModel } from '../professionals/model';
 import { AppointmentModel } from '../appointments/model';
 import { BusinessModel } from '../businesses/model';
-import { AvailabilitySlot } from '@miturnouy/types';
+import { AvailabilitySlot } from '../../shared/types';
 
 // Helper to convert "HH:MM" to minutes from midnight
 export function timeToMinutes(timeStr: string): number {

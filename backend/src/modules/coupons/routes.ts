@@ -3,7 +3,7 @@ import { CouponController } from './controller';
 import { requireAuth } from '../../middleware/auth';
 import { requireTenant } from '../../middleware/tenant';
 import { validate } from '../../middleware/validator';
-import { couponSchema, baseCouponSchema } from '@miturnouy/validation';
+import { couponSchema, baseCouponSchema } from '../../shared/validation';
 
 const router = Router();
 

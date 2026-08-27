@@ -3,7 +3,7 @@ import { ProfessionalController } from './controller';
 import { requireAuth } from '../../middleware/auth';
 import { requireTenant } from '../../middleware/tenant';
 import { validate } from '../../middleware/validator';
-import { professionalSchema } from '@miturnouy/validation';
+import { professionalSchema } from '../../shared/validation';
 
 const router = Router();
 

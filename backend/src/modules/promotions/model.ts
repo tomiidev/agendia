@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { Promotion as IPromotion } from '@miturnouy/types';
+import { Promotion as IPromotion } from '../../shared/types';
 
 export interface PromotionDocument extends Omit<IPromotion, 'id' | 'serviceId'>, Document {
   serviceId: Schema.Types.ObjectId;

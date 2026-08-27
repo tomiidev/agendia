@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { Coupon as ICoupon } from '@miturnouy/types';
+import { Coupon as ICoupon } from '../../shared/types';
 
 export interface CouponDocument extends Omit<ICoupon, 'id' | 'specificServices'>, Document {
   specificServices: Schema.Types.ObjectId[];

@@ -1,5 +1,5 @@
 ﻿import mongoose, { Schema, Document } from 'mongoose';
-import { Client as IClient } from '@miturnouy/types';
+import { Client as IClient } from '../../shared/types';
 
 export interface ClientDocument extends Omit<IClient, 'id'>, Document {}
 

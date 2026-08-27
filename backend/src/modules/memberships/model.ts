@@ -1,5 +1,5 @@
 ﻿import mongoose, { Schema, Document } from 'mongoose';
-import { Membership as IMembership } from '@miturnouy/types';
+import { Membership as IMembership } from '../../shared/types';
 
 export interface MembershipDocument extends Omit<IMembership, 'id'>, Document {}
 

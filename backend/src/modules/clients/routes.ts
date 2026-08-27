@@ -3,7 +3,7 @@ import { ClientController } from './controller';
 import { requireAuth } from '../../middleware/auth';
 import { requireTenant } from '../../middleware/tenant';
 import { validate } from '../../middleware/validator';
-import { clientSchema } from '@miturnouy/validation';
+import { clientSchema } from '../../shared/validation';
 
 const router = Router();
 
