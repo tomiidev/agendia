@@ -17,12 +17,6 @@ importers:
 
   backend:
     dependencies:
-      '@miturnouy/types':
-        specifier: workspace:*
-        version: link:../packages/types
-      '@miturnouy/validation':
-        specifier: workspace:*
-        version: link:../packages/validation
       bcryptjs:
         specifier: ^2.4.3
         version: 2.4.3
