@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../../providers/AuthProvider';
-import { loginSchema } from '@miturnouy/validation';
+import { loginSchema } from '../../shared/validation';
 
 export default function LoginPage() {
   const { login } = useAuth();

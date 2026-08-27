@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../../providers/AuthProvider';
-import { registerSchema } from '@miturnouy/validation';
+import { registerSchema } from '../../shared/validation';
 
 export default function RegisterPage() {
   const { register } = useAuth();
