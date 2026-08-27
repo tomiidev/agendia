@@ -3,7 +3,7 @@ import { PublicController } from './controller';
 import { requireClientAuth } from '../../middleware/clientAuth';
 import { QuoteRequestController } from '../quote-requests/controller';
 import { validate } from '../../middleware/validator';
-import { quoteRequestSchema } from '@miturnouy/validation';
+import { quoteRequestSchema } from '../shared/validation';
 
 const router = Router({ mergeParams: true }); // Merge params to access :businessId
 

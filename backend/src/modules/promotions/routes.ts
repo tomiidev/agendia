@@ -3,7 +3,7 @@ import { PromotionController } from './controller';
 import { requireAuth } from '../../middleware/auth';
 import { requireTenant } from '../../middleware/tenant';
 import { validate } from '../../middleware/validator';
-import { promotionSchema } from '@miturnouy/validation';
+import { promotionSchema } from '../../shared/validation';
 
 const router = Router();
 

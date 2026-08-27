@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { Service as IService } from '@miturnouy/types';
+import { Service as IService } from '../../shared/types';
 
 export interface ServiceDocument extends Omit<IService, 'id' | 'professionals'>, Document {
   professionals: Schema.Types.ObjectId[];

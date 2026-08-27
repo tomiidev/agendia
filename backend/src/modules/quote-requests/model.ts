@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { QuoteRequest as IQuoteRequest } from '@miturnouy/types';
+import { QuoteRequest as IQuoteRequest } from '../../shared/types';
 
 export interface QuoteRequestDocument extends Omit<IQuoteRequest, 'id' | 'businessId' | 'serviceId' | 'clientId'>, Document {
   businessId: mongoose.Types.ObjectId;
