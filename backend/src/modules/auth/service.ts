@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { connectDB } from '../../config/db'; // Import connectDB
 import { UserModel } from '../users/model';
 import { BusinessModel } from '../businesses/model';
 import { MembershipModel } from '../memberships/model';
@@ -13,6 +14,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwtkey12345!@#';
 export class AuthService {
   static async login(email: string, password: string) {
     console.log(`[DEBUG] Attempting login for: ${email}`);
+    await connectDB(); // Ensure connection is ready
+
     let user;
     try {
       user = await UserModel.findOne({ email, active: true });
