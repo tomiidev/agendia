@@ -1,9 +1,11 @@
 import { Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from '../../types/express';
 import { PromotionModel } from './model';
+import { connectDB } from '../../config/db';
 
 export class PromotionController {
   static async getAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
@@ -38,6 +40,7 @@ export class PromotionController {
   }
 
   static async getById(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       const promotion = await PromotionModel.findOne({
         _id: req.params.id,
@@ -61,6 +64,7 @@ export class PromotionController {
   }
 
   static async update(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       if (req.role !== 'OWNER' && req.role !== 'ADMIN') {
         return res.status(403).json({
@@ -93,6 +97,7 @@ export class PromotionController {
   }
 
   static async create(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       if (req.role !== 'OWNER' && req.role !== 'ADMIN') {
         return res.status(403).json({
@@ -120,6 +125,7 @@ export class PromotionController {
   }
 
   static async deactivate(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       if (req.role !== 'OWNER' && req.role !== 'ADMIN') {
         return res.status(403).json({

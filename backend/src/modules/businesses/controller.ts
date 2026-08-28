@@ -3,10 +3,12 @@ import { AuthenticatedRequest } from '../../types/express';
 import { BusinessModel } from './model';
 import { ServiceModel } from '../services/model';
 import { ProfessionalModel } from '../professionals/model';
+import { connectDB } from '../../config/db';
 
 export class BusinessController {
   // Public route to fetch business metadata by web slug
   static async getBySlug(req: Request, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       const { slug } = req.params;
       const business = await BusinessModel.findOne({ slug: slug.toLowerCase(), active: true });
@@ -48,6 +50,7 @@ export class BusinessController {
 
   // Fetch logged-in user's active tenant
   static async getMyBusiness(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       if (!req.businessId) {
         return res.status(400).json({
@@ -75,6 +78,7 @@ export class BusinessController {
 
   // Update business configuration settings or metadata
   static async updateMyBusiness(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       if (!req.businessId) {
         return res.status(400).json({
@@ -116,6 +120,7 @@ export class BusinessController {
 
   // Create Business (Onboarding route)
   static async createBusiness(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       const { name, slug, type, settings } = req.body;
       

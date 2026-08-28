@@ -1,9 +1,11 @@
 import { Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from '../../types/express';
 import { ProfessionalModel } from './model';
+import { connectDB } from '../../config/db';
 
 export class ProfessionalController {
   static async getAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       const professionals = await ProfessionalModel.find({
         businessId: req.businessId,
@@ -20,6 +22,7 @@ export class ProfessionalController {
   }
 
   static async getById(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       const professional = await ProfessionalModel.findOne({
         _id: req.params.id,
@@ -44,6 +47,7 @@ export class ProfessionalController {
   }
 
   static async create(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       // Validate roles
       if (req.role !== 'OWNER' && req.role !== 'ADMIN') {
@@ -72,6 +76,7 @@ export class ProfessionalController {
   }
 
   static async update(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       if (req.role !== 'OWNER' && req.role !== 'ADMIN') {
         return res.status(403).json({
@@ -104,6 +109,7 @@ export class ProfessionalController {
   }
 
   static async delete(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       if (req.role !== 'OWNER' && req.role !== 'ADMIN') {
         return res.status(403).json({

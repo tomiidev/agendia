@@ -3,6 +3,7 @@ import { ProfessionalModel } from '../professionals/model';
 import { AppointmentModel } from '../appointments/model';
 import { BusinessModel } from '../businesses/model';
 import { AvailabilitySlot } from '../../shared/types';
+import { connectDB } from '../../config/db';
 
 // Helper to convert "HH:MM" to minutes from midnight
 export function timeToMinutes(timeStr: string): number {
@@ -32,6 +33,7 @@ export class AvailabilityService {
     professionalId: string,
     dateStr: string // YYYY-MM-DD
   ): Promise<AvailabilitySlot[]> {
+    await connectDB();
     // 1. Fetch details
     const service = await ServiceModel.findOne({ _id: serviceId, businessId, active: true });
     if (!service) {

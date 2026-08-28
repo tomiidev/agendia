@@ -3,6 +3,7 @@ import { AuthenticatedRequest } from '../../types/express';
 import { ClientModel } from './model';
 import { AppointmentModel } from '../appointments/model';
 import mongoose from 'mongoose';
+import { connectDB } from '../../config/db';
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -29,6 +30,7 @@ function computeClientStats(history: any[]) {
 export class ClientController {
   // ── GET /clients ────────────────────────────────────────────────────────────
   static async getAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
@@ -103,6 +105,7 @@ export class ClientController {
 
   // ── GET /clients/:id ─────────────────────────────────────────────────────────
   static async getById(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       const client = await ClientModel.findOne({
         _id: req.params.id,
@@ -145,6 +148,7 @@ export class ClientController {
 
   // ── POST /clients ─────────────────────────────────────────────────────────────
   static async create(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       const { name, phone, email, notes, tags } = req.body;
 
@@ -185,6 +189,7 @@ export class ClientController {
 
   // ── PUT /clients/:id ──────────────────────────────────────────────────────────
   static async update(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    await connectDB();
     try {
       // Whitelist updatable fields — prevents businessId / _id overrides
       const { name, phone, email, notes, tags } = req.body;
