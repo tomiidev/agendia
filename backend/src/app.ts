@@ -31,6 +31,7 @@ const authLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
+  validate: false, // Fix for Vercel proxy environment
 });
 
 // Enable CORS
