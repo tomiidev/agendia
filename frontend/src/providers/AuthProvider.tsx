@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import apiFetch from '../lib/api/client';
+import apiFetch, { loginApiFetch } from '../lib/api/client';
 
 interface AuthContextType {
   user: any | null;
@@ -25,18 +25,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [memberships, setMemberships] = useState<any[]>([]);
   const [activeProfessional, setActiveProfessionalState] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
-  
+
   const router = useRouter();
   const pathname = usePathname() || '';
 
   // Synchronize state from localStorage
   const loadAuthState = () => {
     try {
-      const storedToken = localStorage.getItem('token');
-      const storedUser = localStorage.getItem('user');
-      const storedBiz = localStorage.getItem('activeBusiness');
-      const storedMemberships = localStorage.getItem('memberships');
-      const storedProf = localStorage.getItem('activeProfessional');
+      const getSafeItem = (key: string) => {
+        const item = localStorage.getItem(key);
+        return item && item !== 'undefined' ? item : null;
+      };
+
+      const storedToken = getSafeItem('token');
+      const storedUser = getSafeItem('user');
+      const storedBiz = getSafeItem('activeBusiness');
+      const storedMemberships = getSafeItem('memberships');
+      const storedProf = getSafeItem('activeProfessional');
 
       if (storedToken && storedUser) {
         setUser(JSON.parse(storedUser));
@@ -51,6 +56,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (e) {
       console.error('Failed parsing auth storage:', e);
+      // Clean corrupted storage
+      localStorage.clear();
+      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -71,10 +79,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (credentials: any) => {
     setLoading(true);
     try {
-      const data = await apiFetch('/auth/login', {
+      const response = await loginApiFetch('/auth/login', {
         method: 'POST',
         body: JSON.stringify(credentials),
       });
+
+      const data = response.data;
+
+      if (!data) {
+        throw new Error('Respuesta del servidor inválida');
+      }
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
@@ -91,8 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setActiveBusiness(firstBiz);
         router.push('/dashboard');
       } else {
-        // Go to onboarding
-        router.push('/onboarding');
+        router.push('/dashboard');
       }
     } catch (error) {
       setLoading(false);
@@ -103,10 +116,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (registrationData: any) => {
     setLoading(true);
     try {
-      const data = await apiFetch('/auth/register', {
+      const response = await apiFetch('/auth/register', {
         method: 'POST',
         body: JSON.stringify(registrationData),
       });
+
+      const data = response.data;
+
+      if (!data) {
+        throw new Error('Respuesta del servidor inválida');
+      }
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
@@ -122,7 +141,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setActiveBusiness(firstBiz);
         router.push('/dashboard');
       } else {
-        router.push('/onboarding');
+        router.push('/dashboard');
       }
     } catch (error) {
       setLoading(false);
@@ -183,13 +202,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Auth routing locks
   useEffect(() => {
     if (loading) return;
-    
+
     // Check if we are in the client area
     const isClientDashboard = pathname.startsWith('/client-dashboard');
-    
+
     // If in client area, do not apply SaaS internal routing locks
     if (isClientDashboard) {
-      return; 
+      return;
     }
 
     const publicRoutes = ['/login', '/register', '/book'];

@@ -1,4 +1,11 @@
-const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+let rawApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+// Ensure absolute URL with protocol
+const BASE_API_URL = rawApiUrl.startsWith('http') ? rawApiUrl : `https://${rawApiUrl}`;
+
+// Debug log to check the value
+if (typeof window !== 'undefined') {
+  console.log('API Client initialized with BASE_API_URL:', BASE_API_URL);
+}
 
 export interface ApiResponse<T = any> {
   success: boolean;
@@ -22,11 +29,38 @@ export class ApiError extends Error {
 }
 
 /**
+ * Dedicated login fetch to ensure absolute URL resolution.
+ */
+export async function loginApiFetch<T = any>(path: string, options: RequestInit = {}): Promise<T> {
+  const url = `${BASE_API_URL}${path.startsWith('/') ? '' : '/'}${path}`;
+  console.log('Login attempt to:', url);
+
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+    credentials: "include"
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || !result.success) {
+    throw new ApiError(result.message || 'Error en login', response.status, result.errors);
+  }
+
+  return result;
+}
+
+/**
  * Custom fetch client that automatically attaches authorization and business tenant headers.
  * Returns the full ApiResponse object, useful for paginated endpoints that return 'meta'.
  */
 export async function apiFetchPaginated<T = any>(path: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
-  const url = `${BASE_API_URL}${path}`;
+  const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+  const url = `${BASE_API_URL.replace(/\/$/, '')}/${cleanPath}`;
+  // ...
 
   let token = '';
   let businessId = '';
@@ -49,7 +83,7 @@ export async function apiFetchPaginated<T = any>(path: string, options: RequestI
   if (businessId) {
     headers.set('X-Business-ID', businessId);
   }
-  
+
   if (!headers.has('Content-Type') && !(options.body instanceof FormData)) {
     headers.set('Content-Type', 'application/json');
   }
