@@ -4,7 +4,7 @@
   "private": true,
   "main": "dist/server.js",
   "scripts": {
-    "dev": "tsx watch -r dotenv/config src/server.ts",
+    "dev": "tsx watch src/server.ts",
     "build": "esbuild src/server.ts --bundle --platform=node --target=node18 --outfile=dist/server.js --external:bcryptjs",
     "start": "node dist/server.js",
     "seed": "tsx -r dotenv/config src/scripts/seed.ts"

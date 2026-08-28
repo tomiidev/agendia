@@ -2,12 +2,6 @@ import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { AuthenticatedRequest } from '../types/express';
 
-if (!process.env.JWT_SECRET) {
-  throw new Error('FATAL ERROR: JWT_SECRET environment variable is not defined.');
-}
-
-const JWT_SECRET = process.env.JWT_SECRET;
-
 export interface TokenPayload {
   id: string;
   email: string;
@@ -15,6 +9,13 @@ export interface TokenPayload {
 }
 
 export function requireAuth(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  if (!process.env.JWT_SECRET) {
+    console.error('FATAL ERROR: JWT_SECRET environment variable is not defined.');
+    return res.status(500).json({ success: false, message: 'Configuración interna inválida.' });
+  }
+
+  const JWT_SECRET = process.env.JWT_SECRET;
+  
   // Prefer cookies for security (HttpOnly), fallback to Authorization header
   const token = req.cookies?.token || req.headers.authorization?.split(' ')[1];
 
