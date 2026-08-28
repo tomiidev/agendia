@@ -9,24 +9,41 @@ if (!MONGO_URI) {
   console.error('CRITICAL: MONGO_URI is not defined in environment variables');
 }
 
-let cachedConnection: typeof mongoose | null = null;
+/**
+ * Global is used here to maintain a cached connection across hot reloads
+ * in development and persists across Vercel function invocations.
+ */
+let cached = (global as any).mongoose;
+
+if (!cached) {
+  cached = (global as any).mongoose = { conn: null, promise: null };
+}
 
 export async function connectDB(): Promise<typeof mongoose> {
-  if (cachedConnection && mongoose.connection.readyState === 1) {
-    return cachedConnection;
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    console.log('Connecting to MongoDB Atlas...');
+    const opts = {
+      bufferCommands: false,
+    };
+
+    cached.promise = mongoose.connect(MONGO_URI, opts).then((mongoose) => {
+      console.log('MongoDB Connected');
+      return mongoose;
+    });
   }
 
   try {
-    console.log('Connecting to MongoDB Atlas...');
-    const conn = await mongoose.connect(MONGO_URI, {
-      bufferCommands: false,
-    });
-    cachedConnection = conn;
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-    return conn;
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-    throw error;
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
   }
+
+  return cached.conn;
 }
+
 export default connectDB;
