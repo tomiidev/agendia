@@ -12,15 +12,22 @@ const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwtkey12345!@#';
 
 export class AuthService {
   static async login(email: string, password: string) {
+    console.log(`[DEBUG] Attempting login for: ${email}`);
     const user = await UserModel.findOne({ email, active: true });
+    
     if (!user) {
+      console.log(`[DEBUG] User not found: ${email}`);
       throw new Error('Credenciales inválidas');
     }
 
+    console.log(`[DEBUG] User found, comparing password for: ${email}`);
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
+      console.log(`[DEBUG] Password mismatch for: ${email}`);
       throw new Error('Credenciales inválidas');
     }
+    
+    console.log(`[DEBUG] Login successful for: ${email}`);
 
     // Check memberships
     const memberships = await MembershipModel.find({ userId: user.id, active: true }).populate('businessId');
