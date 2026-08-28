@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { rateLimit } from 'express-rate-limit';
 import errorHandler from './middleware/error';
+import { connectDB } from './config/db';
 
 // Import routes
 import authRoutes from './modules/auth/routes';
@@ -21,6 +22,17 @@ import publicRoutes from './modules/public/routes';
 import slugRoutes from './modules/public/slug-routes';
 
 const app = express();
+
+// Database Connection Middleware
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error('[ERROR] Middleware DB connection failed:', error);
+    res.status(500).json({ success: false, message: 'Error de conexión a la base de datos.' });
+  }
+});
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,

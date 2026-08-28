@@ -1,11 +1,9 @@
 import { Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from '../../types/express';
 import { ServiceModel } from './model';
-import { connectDB } from '../../config/db';
 
 export class ServiceController {
   static async getAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
@@ -53,7 +51,6 @@ export class ServiceController {
   }
 
   static async getById(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       const service = await ServiceModel.findOne({
         _id: req.params.id,
@@ -77,7 +74,6 @@ export class ServiceController {
   }
 
   static async create(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       if (req.role !== 'OWNER' && req.role !== 'ADMIN') {
         return res.status(403).json({
@@ -112,7 +108,6 @@ export class ServiceController {
   }
 
   static async update(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       if (req.role !== 'OWNER' && req.role !== 'ADMIN') {
         return res.status(403).json({
@@ -168,7 +163,6 @@ export class ServiceController {
   }
 
   static async delete(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       if (req.role !== 'OWNER' && req.role !== 'ADMIN') {
         return res.status(403).json({

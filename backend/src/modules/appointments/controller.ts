@@ -9,11 +9,9 @@ import { PromotionModel } from '../promotions/model';
 import { BusinessModel } from '../businesses/model';
 import { AvailabilityService, minutesToTime, timeToMinutes } from '../availability/service';
 import { NotificationService } from '../../utils/notifications';
-import { connectDB } from '../../config/db';
 
 export class AppointmentController {
   static async getAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       const { date, startDate, endDate, professionalId } = req.query as {
         date?: string;
@@ -50,7 +48,6 @@ export class AppointmentController {
   }
 
   static async getById(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       const appointment = await AppointmentModel.findOne({
         _id: req.params.id,
@@ -77,7 +74,6 @@ export class AppointmentController {
   }
 
   static async create(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       const {
         clientId,
@@ -174,7 +170,6 @@ export class AppointmentController {
   }
 
   static async updateStatus(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       const { status, comment } = req.body;
       
@@ -223,7 +218,6 @@ export class AppointmentController {
   }
 
   static async update(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       const { date, startTime, notes, professionalId, serviceId } = req.body;
 
@@ -301,7 +295,6 @@ export class AppointmentController {
   }
 
   static async updatePastAppointmentsToNoShow(_req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       // 1. Calcular la fecha y hora límite ajustada a Uruguay (UTC-3)
       const now = new Date();

@@ -1,11 +1,9 @@
 import { Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from '../../types/express';
 import { CouponModel } from './model';
-import { connectDB } from '../../config/db';
 
 export class CouponController {
   static async getAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
@@ -39,7 +37,6 @@ export class CouponController {
   }
 
   static async getById(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       const coupon = await CouponModel.findOne({
         _id: req.params.id,
@@ -63,7 +60,6 @@ export class CouponController {
   }
 
   static async update(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       if (req.role !== 'OWNER' && req.role !== 'ADMIN') {
         return res.status(403).json({
@@ -114,7 +110,6 @@ export class CouponController {
   }
 
   static async create(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       if (req.role !== 'OWNER' && req.role !== 'ADMIN') {
         return res.status(403).json({
@@ -160,7 +155,6 @@ export class CouponController {
 
   // Public/Private endpoint to check if code is valid
   static async validateCoupon(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       const { code } = req.params;
       const { serviceId, basePrice } = req.query as { serviceId?: string; basePrice?: string };
@@ -234,7 +228,6 @@ export class CouponController {
   }
 
   static async deactivate(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    await connectDB();
     try {
       if (req.role !== 'OWNER' && req.role !== 'ADMIN') {
         return res.status(403).json({
