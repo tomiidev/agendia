@@ -13,7 +13,13 @@ const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwtkey12345!@#';
 export class AuthService {
   static async login(email: string, password: string) {
     console.log(`[DEBUG] Attempting login for: ${email}`);
-    const user = await UserModel.findOne({ email, active: true });
+    let user;
+    try {
+      user = await UserModel.findOne({ email, active: true });
+    } catch (dbError) {
+      console.error(`[ERROR] Database error during findOne for: ${email}`, dbError);
+      throw new Error('Error interno al buscar usuario');
+    }
     
     if (!user) {
       console.log(`[DEBUG] User not found: ${email}`);
