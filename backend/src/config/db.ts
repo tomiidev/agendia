@@ -18,7 +18,9 @@ export async function connectDB(): Promise<typeof mongoose> {
 
   try {
     console.log('Connecting to MongoDB Atlas...');
-    const conn = await mongoose.connect(MONGO_URI);
+    const conn = await mongoose.connect(MONGO_URI, {
+      bufferCommands: false,
+    });
     cachedConnection = conn;
     console.log(`MongoDB Connected: ${conn.connection.host}`);
     return conn;
