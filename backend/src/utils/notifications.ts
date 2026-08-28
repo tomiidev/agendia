@@ -68,6 +68,21 @@ Esperamos volver a verte pronto.`;
 
     return this.sendEmail({ to: client.email || 'customer@example.com', subject, body });
   }
+
+  static async sendAppointmentReminder(appointment: any, client: any, service: any, business: any) {
+    const subject = `Recordatorio de tu cita en ${business.name}`;
+    const body = `Hola ${client.name},
+
+Este es un recordatorio de tu cita de mañana:
+
+- Servicio: ${service.name}
+- Fecha: ${appointment.date}
+- Hora: ${appointment.startTime}
+
+¡Te esperamos!`;
+
+    return this.sendEmail({ to: client.email || 'customer@example.com', subject, body });
+  }
 }
 
 export default NotificationService;

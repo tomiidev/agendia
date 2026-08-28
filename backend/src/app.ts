@@ -20,6 +20,7 @@ import waitlistRoutes from './modules/waitlist/routes';
 import quoteRequestRoutes from './modules/quote-requests/routes';
 import publicRoutes from './modules/public/routes';
 import slugRoutes from './modules/public/slug-routes';
+import cronRoutes from './modules/cron/routes';
 
 const app = express();
 
@@ -91,6 +92,7 @@ app.use('/api/v1/promotions', promotionRoutes);
 app.use('/api/v1/reports', reportRoutes);
 app.use('/api/v1/waitlist', waitlistRoutes);
 app.use('/api/v1/quote-requests', quoteRequestRoutes);
+app.use('/api/v1/cron', cronRoutes);
 app.use('/api/v1/public/by-slug', slugRoutes);
 app.use('/api/v1/public/:businessId', publicRoutes);
 // Mount new standalone routes
